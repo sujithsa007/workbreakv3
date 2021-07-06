@@ -32,6 +32,12 @@ class _HomeScreenState extends State<HomeScreen> {
         ? _mediaQueryHeight * .01
         : _mediaQueryHeight * .01;
 
+    double _opacity = 0.7;
+
+    Color _textColor = _clockController.buttonChange == false
+        ? Colors.white70
+        : Colors.black87;
+
     print(_mediaQueryHeight);
 
     var _workOptions = <String>[
@@ -60,18 +66,10 @@ class _HomeScreenState extends State<HomeScreen> {
 
     _onSelectedWorkInterval(selected) {
       _clockController.setIntervalTime = selected;
-      if (_clockController.changeInterval == true) {
-        _clockController.onToggleValues(_clockController.selectedWorkTime,
-            _clockController.selectedWorkInterval);
-      }
     }
 
     _onSelectedWorkTime(String selected) {
       _clockController.setWorkTime = selected;
-      if (_clockController.changeInterval == true) {
-        _clockController.onToggleValues(_clockController.selectedWorkTime,
-            _clockController.selectedWorkInterval);
-      }
     }
 
     // ignore: slash_for_doc_comments
@@ -89,11 +87,14 @@ class _HomeScreenState extends State<HomeScreen> {
     Container _backgroundImage = Container(
       height: _mediaQueryHeight,
       width: _mediaQueryWidth,
-      child: FittedBox(
-          fit: BoxFit.fill,
-          child: Image.asset('assets/bgImg.jpg',
-              color: Color.fromRGBO(255, 255, 255, 0.9),
-              colorBlendMode: BlendMode.modulate)),
+      child: Opacity(
+        opacity: 0.9,
+        child: FittedBox(
+            fit: BoxFit.fill,
+            child: Image.asset('assets/bgImg.jpg',
+                color: Color.fromRGBO(255, 255, 255, 0.9),
+                colorBlendMode: BlendMode.modulate)),
+      ),
     );
 
     RichText _appBarTitle = RichText(
@@ -114,10 +115,17 @@ class _HomeScreenState extends State<HomeScreen> {
         Container(
           margin: EdgeInsets.only(left: 5, right: 5),
           width: _mediaQueryWidth * .98,
-          padding: EdgeInsets.only(bottom: 5, top: 5),
+          padding: EdgeInsets.only(bottom: 15, top: 15),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(5.0),
-            color: Colors.white30,
+            gradient: LinearGradient(
+                colors: _clockController.buttonChange == false
+                    ? [
+                        Colors.red.withOpacity(_opacity),
+                        Colors.amber.withOpacity(_opacity),
+                        Colors.red.withOpacity(_opacity)
+                      ]
+                    : [Colors.blue, Colors.white, Colors.red]),
             border: Border.all(
               color: Colors.grey,
               width: 1,
@@ -140,7 +148,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: _fontSizeTitle,
-                      color: Colors.white70),
+                      color: _textColor),
                 ),
               ),
               Container(
@@ -151,7 +159,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: _fontSizeSubtitle,
-                      color: Colors.white70),
+                      color: _textColor),
                   textAlign: TextAlign.end,
                 ),
               ),
@@ -163,8 +171,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       labels: options,
                       orientation: GroupedButtonsOrientation.HORIZONTAL,
                       labelStyle: TextStyle(
-                          fontSize: _fontSizeBullet, color: Colors.white70),
-                      activeColor: Colors.white70,
+                          fontSize: _fontSizeBullet, color: _textColor),
+                      activeColor: _textColor,
                       onSelected: (String selected) {
                         selector == 1
                             ? _onSelectedWorkTime(selected)
@@ -179,79 +187,45 @@ class _HomeScreenState extends State<HomeScreen> {
     Container _confirmButton = Container(
       margin: EdgeInsets.only(left: 30, right: 30),
       width: _mediaQueryWidth * .2,
-      child: AnimatedOpacity(
-        opacity: _clockController.startWorkingTrigger ? 1.0 : 0.0,
-        duration: Duration(seconds: 1),
-        child: Visibility(
-          visible: _clockController.startWorkingTrigger,
-          child: ElevatedButton(
-            child: Text(
-              'Start Working',
-              style: TextStyle(color: Colors.black54),
+      child: DecoratedBox(
+        decoration: BoxDecoration(
+            gradient: LinearGradient(
+                colors: _clockController.buttonChange == false
+                    ? [Colors.red, Colors.amber, Colors.red]
+                    : [Colors.blue, Colors.white, Colors.red]),
+            border: Border.all(
+              color: Colors.transparent,
             ),
-            style: ElevatedButton.styleFrom(
-              primary: Colors.white,
-              shadowColor: Colors.black,
-              splashFactory: InkRipple.splashFactory,
-              padding: EdgeInsets.only(top: 20, bottom: 20),
-              elevation: 5,
-              shape: const RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(10))),
-              textStyle: TextStyle(
-                  color: Colors.white,
-                  fontSize: _fontButton,
-                  fontWeight: FontWeight.bold),
-            ),
-            onPressed: _clockController.changeInterval == true
-                ? () async {
-                    Future.delayed(const Duration(seconds: 2), () {
-                      return null;
-                    });
-                  }
-                : () async {
-                    setState(() {});
-                    await _clockController.onClickStartWork(
-                        _clockController.selectedWorkTime,
-                        _clockController.selectedWorkInterval);
-                  },
+            borderRadius: BorderRadius.all(
+              Radius.circular(10),
+            )),
+        child: ElevatedButton(
+          child: Text(
+            _clockController.buttonChange == false
+                ? 'Start Working'
+                : 'Change Timings',
+            style: TextStyle(color: _textColor),
           ),
+          style: ElevatedButton.styleFrom(
+            primary: Colors.transparent,
+            shadowColor: Colors.black,
+            splashFactory: InkRipple.splashFactory,
+            padding: EdgeInsets.only(top: 20, bottom: 20),
+            elevation: 5,
+            textStyle: TextStyle(
+                color: Colors.white,
+                fontSize: _fontButton,
+                fontWeight: FontWeight.bold),
+          ),
+          onPressed: () async {
+            await _clockController.onClickStartWork(
+                _clockController.selectedWorkTime,
+                _clockController.selectedWorkInterval);
+            setState(() {});
+          },
         ),
       ),
     );
-
-    Container _happyWorkingBanner = Container(
-        child: AnimatedContainer(
-      margin: EdgeInsets.only(left: 5, right: 5),
-      padding: EdgeInsets.only(left: 5.0, right: 5.0),
-      width: _clockController.startWorkingTrigger ? 0 : _mediaQueryWidth * .7,
-      height:
-          _clockController.startWorkingTrigger ? 0 : _mediaQueryHeight * .15,
-      alignment: Alignment.center,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(5.0),
-        color: Colors.grey,
-        border: Border.all(
-          color: Colors.grey,
-          width: 1,
-        ),
-        boxShadow: [
-          BoxShadow(
-              color: Colors.black87,
-              blurRadius: 2.0,
-              spreadRadius: 0.0,
-              offset: Offset(2.0, 2.0)),
-        ],
-      ),
-      duration: const Duration(seconds: 2),
-      child: Text(
-        'Ensure to take adequate breaks in between and '
-        'also stay healthy by eating timely, staying '
-        'hydrated and also by stretching a bit.\n\nHappy working!!!',
-        style: TextStyle(
-            fontSize: 17, fontWeight: FontWeight.bold, color: Colors.white),
-        textAlign: TextAlign.center,
-      ),
-    ));
 
     return Scaffold(
       body: Stack(
@@ -289,7 +263,6 @@ class _HomeScreenState extends State<HomeScreen> {
                           height: 20,
                         ),
                   _confirmButton,
-                  _happyWorkingBanner,
                   SizedBox(height: 40),
                 ],
               )),

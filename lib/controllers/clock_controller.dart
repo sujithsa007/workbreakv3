@@ -40,25 +40,18 @@ class ClockController extends GetxController {
     _firstLoad.value = val;
   }
 
-  RxBool _changeInterval = false.obs;
   RxBool _clockThemeTrigger = false.obs;
   get clockThemeTrigger => _clockThemeTrigger.value;
-  get changeInterval => _changeInterval.value;
-
-  set setChangeIntervalValue(val) {
-    _changeInterval.value = val;
-  }
-
-  RxBool _startWorkingTrigger = true.obs;
-
-  get startWorkingTrigger => _startWorkingTrigger.value;
-
-  set setStartWorkingTrigger(val) {
-    _startWorkingTrigger.value = val;
-  }
 
   set setClockThemeTriggerValue(val) {
     _clockThemeTrigger.value = val;
+  }
+
+  RxBool _buttonChange = false.obs;
+  get buttonChange => _buttonChange.value;
+
+  set setButtonChange(val) {
+    _buttonChange.value = val;
   }
 
   RxString _selectedWorkTime = ''.obs;
@@ -89,60 +82,36 @@ class ClockController extends GetxController {
     if (workTime == '' || breakInterval == '') {
       Get.snackbar(
         'Oops',
-        'Please select the work and break times',
+        'Please select both work and break times',
         duration: Duration(seconds: 3),
         colorText: Colors.black,
         backgroundColor: Colors.white,
       );
-      await _textToSpeechController
-          .speak(' Please select the work and break times first.');
     } else {
-      setChangeIntervalValue = true;
-      setStartWorkingTrigger = false;
-      // if (_changeInterval.value == true) {
-      // Get.snackbar(
-      //   'Oops',
-      //   'Toggle to apply settings',
-      //   duration: Duration(seconds: 3),
-      //   colorText: Colors.black,
-      //   backgroundColor: Colors.white,
-      // );
-      // await _textToSpeechController.speak(
-      //     'Your settings have already been applied. Just change it by toggling between the values');
-      // } else {
       setClockThemeTriggerValue = true;
+
       Get.snackbar(
         'Success',
-        'Start Working',
+        _buttonChange.value == false
+            ? 'Start Working'
+            : 'Your new settings have been applied',
         duration: Duration(seconds: 3),
         colorText: Colors.black,
         backgroundColor: Colors.white,
       );
-      await _textToSpeechController.speak(
-          'Good job !!! Now you will be alerted for breaks based on your above '
-          'settings. You can change it any time by toggling between the values');
-      await _setUpTimer(workTime, breakInterval);
-      // setChangeIntervalValue = true;
+      _buttonChange.value == true
+          ? _selectedWorkTimer.cancel()
+          : print('Timer not active');
+      _buttonChange.value == true
+          ? _selectedIntervalTimer.cancel()
+          : print('Timer not active');
+      _buttonChange.value == true
+          ? _testTimer.cancel()
+          : print('Timer not active');
+      setButtonChange = true;
+      await _setUpTimer(_selectedWorkTime.value, _selectedWorkInterval.value);
       // }
     }
-  }
-
-  onToggleValues(workTimeReminder, breakIntervalReminder) async {
-    print('toggled WorkTime****' + workTimeReminder.toString());
-    print('toggled IntervalTime****' + breakIntervalReminder.toString());
-    Get.snackbar(
-      'Hurray',
-      'New settings applied',
-      duration: Duration(seconds: 3),
-      colorText: Colors.black,
-      backgroundColor: Colors.white,
-    );
-    await _textToSpeechController.speak('Your new settings have been applied');
-    _selectedWorkTimer.cancel();
-    _selectedIntervalTimer.cancel();
-    _testTimer.cancel();
-    await _setUpTimer(workTimeReminder, breakIntervalReminder);
-    _changeInterval.value = true;
   }
 
   _startTimer(int duration, String message, bool triggerFn) async {
