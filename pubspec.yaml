@@ -18,6 +18,7 @@ dependencies:
   flutter_tts: ^3.0.0
   wakelock : 0.1.4+2
   intl: ^0.17.0
+  google_mobile_ads: ^0.13.0
 
 dev_dependencies:
   flutter_test:
@@ -31,19 +32,6 @@ flutter:
    - assets/
 
   fonts:
-     - family: DrToboggan
-       fonts:
-         - asset: fonts/DrToboggan.ttf
-           style: italic
      - family: Future
        fonts:
          - asset: fonts/future.ttf
-     - family: MIL
-       fonts:
-          - asset: fonts/MIT.ttf
-     - family: CuteBlock
-       fonts:
-          - asset: fonts/CuteBlock.ttf
-     - family: Clint
-       fonts:
-          - asset: fonts/ClintMarker.ttf

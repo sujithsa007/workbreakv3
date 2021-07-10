@@ -9,15 +9,49 @@
 
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:wakelock/wakelock.dart';
 import 'package:work_break/controllers/text_to_speech_controller.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:work_break/utilities/ad_helper.dart';
+import 'package:work_break/utilities/messages.dart';
 
 class ClockController extends GetxController {
   ClockController() {
+    _initGoogleMobileAds();
+    loadBanner();
     _clockAnimateTimer();
     Wakelock.enable();
+  }
+
+  Future<InitializationStatus> _initGoogleMobileAds() {
+    // TODO: Initialize Google Mobile Ads SDK
+    return MobileAds.instance.initialize();
+  }
+
+  BannerAd _ad;
+
+  get ad => _ad;
+
+  loadBanner() {
+    _ad = BannerAd(
+      adUnitId: AdHelper.bannerAdUnitId,
+      size: AdSize.banner,
+      request: AdRequest(),
+      listener: BannerAdListener(
+        onAdLoaded: (_) {
+          print('Ad load success');
+        },
+        onAdFailedToLoad: (ad, error) {
+          ad.dispose();
+          print('Ad load failed (code=${error.code} message=${error.message})');
+        },
+      ),
+    );
+
+    // TODO: Load an ad
+    _ad.load();
   }
 
   final TextToSpeechController _textToSpeechController =
@@ -33,6 +67,8 @@ class ClockController extends GetxController {
   Timer _selectedWorkTimer;
   Timer _selectedIntervalTimer;
   Timer _testTimer;
+
+  String _finalAnnounceTime = '';
 
   RxBool _firstLoad = true.obs;
 
@@ -78,27 +114,34 @@ class ClockController extends GetxController {
     });
   }
 
+  String _convertTimeToHoursAndMinutes(int value) {
+    final int hour = value ~/ 60;
+    final int minutes = value % 60;
+    return '${hour.toString()}:${minutes.toString()}';
+  }
+
   onClickStartWork(workTime, breakInterval) async {
+    // print(_convertTimeToHoursAndMinutes(180));
     if (workTime == '' || breakInterval == '') {
       Get.snackbar(
         'Oops',
         'Please select both work and break times',
         duration: Duration(seconds: 3),
-        colorText: Colors.black,
-        backgroundColor: Colors.white,
+        colorText: Colors.white,
+        backgroundColor: Colors.green,
       );
     } else {
       setClockThemeTriggerValue = true;
 
       Get.snackbar(
-        'Success',
-        _buttonChange.value == false
-            ? 'Start Working'
-            : 'Your new settings have been applied',
-        duration: Duration(seconds: 3),
-        colorText: Colors.black,
-        backgroundColor: Colors.white,
-      );
+          'Success',
+          _buttonChange.value == false
+              ? 'Start Working'
+              : 'Your new settings have been applied',
+          duration: Duration(seconds: 3),
+          colorText: Colors.white,
+          backgroundColor: Colors.blue,
+          snackPosition: SnackPosition.BOTTOM);
       _buttonChange.value == true
           ? _selectedWorkTimer.cancel()
           : print('Timer not active');
@@ -140,24 +183,50 @@ class ClockController extends GetxController {
     print('timer set workTime****' + _timeForWorkTimer.toString());
     print('timer set intervalTime****' + _timeForIntervalTimer.toString());
 
+    String _convertedTime = _convertTimeToHoursAndMinutes(_timeForWorkTimer);
+
+    if (_convertedTime.split(':')[1] == '0') {
+      if (_convertedTime.split(':')[0] == '1') {
+        _finalAnnounceTime = '1 hour';
+      } else {
+        _finalAnnounceTime = _convertedTime.split(':')[0] + ' hours';
+      }
+    } else if (_convertedTime.split(':')[0] == '0') {
+      _finalAnnounceTime = _convertedTime.split(':')[1] + ' minutes';
+    } else {
+      if (_convertedTime.split(':')[0] == '1') {
+        _finalAnnounceTime =
+            '1 hour and ' + _convertedTime.split(':')[1] + ' minutes';
+      } else {
+        _finalAnnounceTime = _convertedTime.split(':')[0] +
+            ' hours and ' +
+            _convertedTime.split(':')[1] +
+            ' minutes';
+      }
+    }
+    print(_convertedTime);
+    print(_finalAnnounceTime);
+    var _randomMessage = RandomMessage.getARandomMessage();
+    print('You have worked for ' + _finalAnnounceTime + '. $_randomMessage.');
+
     _selectedWorkTimer = await _startTimer(
         _timeForWorkTimer,
-        'You have worked for ' +
-            _timeForWorkTimer.toString() +
-            ' minutes. Time to take a break.',
+        'You have worked for ' + _finalAnnounceTime + '. $_randomMessage.',
         false);
 
     _selectedIntervalTimer = await _startTimer(
         _timeForWorkTimer + _timeForIntervalTimer,
-        'Your have taken a break for ' +
-            _timeForIntervalTimer.toString() +
-            ' minutes. Lets get back to work.',
+        _timeForIntervalTimer.toString() == '60'
+            ? 'You have taken a break for 1 hour. Lets get back to work.'
+            : 'You have taken a break for ' +
+                _timeForIntervalTimer.toString() +
+                ' minutes. Lets get back to work.',
         true);
 
     //Tester timer
     int i = 0;
     _testTimer = Timer.periodic(Duration(seconds: 1), (Timer timer) async {
-      print(i++);
+      // print(i++);
     });
   }
 }

@@ -34,15 +34,17 @@ class ClockScreen extends StatelessWidget {
                     TextSpan(
                       text: clockController.currentTimeToDisplay,
                       style: TextStyle(
-                          fontSize: _mediaQueryHeight > 550 ? 20 : 20,
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold),
+                        fontSize: _mediaQueryHeight > 550 ? 25 : 20,
+                        color: Colors.black,
+                        fontStyle: FontStyle.italic,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                     TextSpan(
                       text: ' ' + clockController.amPmToDisplay,
                       style: TextStyle(
                           fontSize: _mediaQueryHeight > 550 ? 15 : 9,
-                          color: Colors.white,
+                          color: Colors.black,
                           fontWeight: FontWeight.bold),
                     ),
                   ]),
@@ -76,39 +78,59 @@ class ClockScreen extends StatelessWidget {
                 ),
               ),
               _displayTime(_clockController),
-              _clockRing(
-                  0.42, Colors.black, Colors.white, Colors.red, Colors.red),
-              _clockRing(0.48, Colors.black, Colors.white, Colors.white,
-                  Colors.orangeAccent),
-              _clockRing(
-                  0.54, Colors.black, Colors.white, Colors.blue, Colors.red),
-              _clockController.clockThemeTrigger
-                  ? Opacity(
-                      opacity: .25,
-                      child: Center(
-                        child: Icon(
-                          Icons.star,
-                          color: Colors.white,
-                          size: _mediaQueryWidth * .35,
-                          semanticLabel:
-                              'Text to announce in accessibility modes',
-                        ),
-                      ),
-                    )
-                  : Container(),
-              _clockController.clockThemeTrigger
-                  ? Container()
-                  : Opacity(
-                      opacity: .25,
-                      child: Center(
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(100),
-                          child: Container(
-                              width: _imageWidth,
-                              child: Image.asset('assets/IM.png')),
-                        ),
-                      ),
+              _clockRing(0.42, Colors.transparent, Colors.transparent,
+                  Colors.blue, Colors.green),
+              _clockRing(0.48, Colors.transparent, Colors.transparent,
+                  Colors.white, Colors.white),
+              _clockRing(0.54, Colors.transparent, Colors.transparent,
+                  Colors.blue, Colors.green),
+              Opacity(
+                opacity: .25,
+                child: Center(
+                  child: ShaderMask(
+                    shaderCallback: (bounds) => RadialGradient(
+                      center: Alignment.center,
+                      radius: .1,
+                      colors: _clockController.clockThemeTrigger
+                          ? [Colors.blue, Colors.blueAccent]
+                          : [Colors.green, Colors.greenAccent],
+                      tileMode: TileMode.clamp,
+                    ).createShader(bounds),
+                    child: Icon(
+                      Icons.ac_unit,
+                      color: _clockController.clockThemeTrigger
+                          ? Colors.blue
+                          : Colors.amber,
+                      size: _mediaQueryWidth * .44,
+                      semanticLabel: 'Text to announce in accessibility modes',
                     ),
+                  ),
+                ),
+              ),
+              // _clockController.clockThemeTrigger
+              //     ? Opacity(
+              //         opacity: .25,
+              //         child: Center(
+              //           child: Icon(
+              //             Icons.work_outlined,
+              //             color: Colors.black54,
+              //             size: _mediaQueryWidth * .30,
+              //             semanticLabel:
+              //                 'Text to announce in accessibility modes',
+              //           ),
+              //         ),
+              //       )
+              //     : Opacity(
+              //         opacity: .3,
+              //         child: Center(
+              //           child: ClipRRect(
+              //             borderRadius: BorderRadius.circular(100),
+              //             child: Container(
+              //                 width: _imageWidth,
+              //                 child: Image.asset('assets/IM.png')),
+              //           ),
+              //         ),
+              //       ),
             ],
           ))),
     );

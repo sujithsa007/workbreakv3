@@ -8,8 +8,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:grouped_buttons/grouped_buttons.dart';
 import 'package:work_break/controllers/clock_controller.dart';
+import 'package:work_break/utilities/messages.dart';
 import 'package:work_break/views/clock.dart';
 import 'dart:io' show Platform;
 
@@ -24,19 +26,17 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     var _mediaQueryHeight = MediaQuery.of(context).size.height;
     var _mediaQueryWidth = MediaQuery.of(context).size.width;
-    double _fontSizeTitle = _mediaQueryHeight > 550 ? 18 : 14;
-    double _fontSizeSubtitle = _mediaQueryHeight > 550 ? 14 : 10;
+    double _fontSizeTitle = _mediaQueryHeight > 550 ? 22 : 18;
+    double _fontSizeSubtitle = _mediaQueryHeight > 550 ? 16 : 12;
     double _fontSizeBullet = _mediaQueryHeight > 550 ? 12 : 8;
     double _fontButton = _mediaQueryHeight > 550 ? 22 : 16;
     double _topMargin = _mediaQueryHeight > 550
         ? _mediaQueryHeight * .01
         : _mediaQueryHeight * .01;
 
-    double _opacity = 0.7;
+    double _opacity = 0.8;
 
-    Color _textColor = _clockController.buttonChange == false
-        ? Colors.white70
-        : Colors.black87;
+    Color _textColor = Colors.black;
 
     print(_mediaQueryHeight);
 
@@ -50,6 +50,8 @@ class _HomeScreenState extends State<HomeScreen> {
       "120 mins    ",
       "135 mins    ",
       "150 mins    ",
+      "165 mins    ",
+      "180 mins    ",
     ];
 
     var _intervalOptions = <String>[
@@ -62,6 +64,9 @@ class _HomeScreenState extends State<HomeScreen> {
       "35 mins    ",
       "40 mins    ",
       "45 mins    ",
+      "50 mins    ",
+      "55 mins    ",
+      "60 mins    ",
     ];
 
     _onSelectedWorkInterval(selected) {
@@ -81,7 +86,10 @@ class _HomeScreenState extends State<HomeScreen> {
         TextSpan(
           text: name,
           style: TextStyle(
-              fontSize: fontSize, color: color, fontWeight: FontWeight.bold),
+              fontSize: fontSize,
+              color: color,
+              // fontWeight: FontWeight.bold,
+              fontFamily: 'Future'),
         );
 
     Container _backgroundImage = Container(
@@ -99,68 +107,62 @@ class _HomeScreenState extends State<HomeScreen> {
 
     RichText _appBarTitle = RichText(
       text: TextSpan(children: [
-        _headerSpanText('W', Colors.white, 30),
-        _headerSpanText('O', Colors.white54, 22),
-        _headerSpanText('R', Colors.white, 19),
-        _headerSpanText('K    ', Colors.white54, 15),
-        _headerSpanText('B', Colors.white, 15),
-        _headerSpanText('R', Colors.white54, 19),
-        _headerSpanText('E', Colors.white, 22),
-        _headerSpanText('A', Colors.white54, 26),
-        _headerSpanText('K', Colors.white, 31),
+        _headerSpanText('W', Colors.black, 35),
+        _headerSpanText('O', Colors.black, 32),
+        _headerSpanText('R', Colors.black, 30),
+        _headerSpanText('K  ', Colors.black, 27),
+        _headerSpanText('B', Colors.black, 23),
+        _headerSpanText('R', Colors.black, 27),
+        _headerSpanText('E', Colors.black, 30),
+        _headerSpanText('A', Colors.black, 32),
+        _headerSpanText('K', Colors.black, 35),
       ]),
     );
 
     Container _optionsContainer(String title, var options, int selector) =>
         Container(
-          margin: EdgeInsets.only(left: 5, right: 5),
+          margin: EdgeInsets.only(left: 8, right: 8),
           width: _mediaQueryWidth * .98,
-          padding: EdgeInsets.only(bottom: 15, top: 15),
+          padding: EdgeInsets.only(bottom: 10, top: 10),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(5.0),
             gradient: LinearGradient(
                 colors: _clockController.buttonChange == false
                     ? [
-                        Colors.red.withOpacity(_opacity),
-                        Colors.amber.withOpacity(_opacity),
-                        Colors.red.withOpacity(_opacity)
+                        Colors.greenAccent.withOpacity(_opacity),
+                        Colors.white.withOpacity(_opacity),
+                        Colors.greenAccent.withOpacity(_opacity)
                       ]
-                    : [Colors.blue, Colors.white, Colors.red]),
+                    : [
+                        Colors.blue.withOpacity(_opacity),
+                        Colors.white.withOpacity(_opacity),
+                        Colors.blue.withOpacity(_opacity)
+                      ]),
             border: Border.all(
               color: Colors.grey,
               width: 1,
             ),
             boxShadow: [
               BoxShadow(
-                  color: Colors.black87,
+                  color: Colors.black54,
                   blurRadius: 2.0,
                   spreadRadius: 0.0,
-                  offset: Offset(2.0, 2.0)),
+                  offset: Offset(1.5, 2.0)),
             ],
           ),
           child: Column(
             children: [
               Container(
+                alignment: Alignment.center,
                 width: _mediaQueryWidth,
-                margin: EdgeInsets.only(left: 10),
+                margin: EdgeInsets.only(left: 10, bottom: 10, top: 5),
                 child: Text(
                   title,
                   style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: _fontSizeTitle,
-                      color: _textColor),
-                ),
-              ),
-              Container(
-                width: double.infinity,
-                margin: EdgeInsets.only(left: 10, top: 5),
-                child: Text(
-                  'Scroll for more options-->',
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: _fontSizeSubtitle,
-                      color: _textColor),
-                  textAlign: TextAlign.end,
+                      color: _textColor,
+                      fontFamily: 'Future'),
                 ),
               ),
               Container(
@@ -171,7 +173,9 @@ class _HomeScreenState extends State<HomeScreen> {
                       labels: options,
                       orientation: GroupedButtonsOrientation.HORIZONTAL,
                       labelStyle: TextStyle(
-                          fontSize: _fontSizeBullet, color: _textColor),
+                          fontSize: _fontSizeBullet,
+                          color: _textColor,
+                          fontWeight: FontWeight.w700),
                       activeColor: _textColor,
                       onSelected: (String selected) {
                         selector == 1
@@ -191,8 +195,8 @@ class _HomeScreenState extends State<HomeScreen> {
         decoration: BoxDecoration(
             gradient: LinearGradient(
                 colors: _clockController.buttonChange == false
-                    ? [Colors.red, Colors.amber, Colors.red]
-                    : [Colors.blue, Colors.white, Colors.red]),
+                    ? [Colors.greenAccent, Colors.white, Colors.greenAccent]
+                    : [Colors.blue, Colors.white, Colors.blue]),
             border: Border.all(
               color: Colors.transparent,
             ),
@@ -202,9 +206,9 @@ class _HomeScreenState extends State<HomeScreen> {
         child: ElevatedButton(
           child: Text(
             _clockController.buttonChange == false
-                ? 'Start Working'
-                : 'Change Timings',
-            style: TextStyle(color: _textColor),
+                ? 'S t a r t   W o r k i n g'
+                : 'C h a n g e   T i m i n g s',
+            style: TextStyle(color: _textColor, fontFamily: 'Future'),
           ),
           style: ElevatedButton.styleFrom(
             primary: Colors.transparent,
@@ -227,45 +231,68 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
 
+    Container _bannerArea = Container(
+      width: _mediaQueryWidth,
+      height: _mediaQueryHeight * 0.08,
+      color: Colors.white,
+      child: Center(
+        child: AdWidget(
+          ad: _clockController.ad,
+        ),
+      ),
+    );
+
     return Scaffold(
       body: Stack(
         children: <Widget>[
           _backgroundImage,
-          Scaffold(
-              backgroundColor: Colors.transparent,
-              appBar: AppBar(
-                title: _appBarTitle,
-                centerTitle: true,
-                backgroundColor: Colors.transparent,
-                elevation: 0.0,
-              ),
-              body: ListView(
-                children: [
-                  Align(
-                    child: Container(
-                        margin: EdgeInsets.only(top: _topMargin),
-                        width: _mediaQueryWidth * .6,
-                        height: _mediaQueryWidth * .6,
-                        child: ClockScreen()),
-                    alignment: Alignment.topCenter,
-                  ),
-                  _optionsContainer('How long will you work?', _workOptions, 1),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  _optionsContainer(
-                      'How long will be your break?', _intervalOptions, 2),
-                  Platform.isIOS
-                      ? SizedBox(
-                          height: 50,
-                        )
-                      : SizedBox(
-                          height: 20,
+          Column(
+            children: [
+              Container(
+                height: _mediaQueryHeight * 0.92,
+                child: Scaffold(
+                    backgroundColor: Colors.transparent,
+                    appBar: AppBar(
+                      title: _appBarTitle,
+                      centerTitle: true,
+                      backgroundColor: Colors.transparent,
+                      elevation: 0.0,
+                    ),
+                    body: ListView(
+                      children: [
+                        Align(
+                          child: Container(
+                              margin: EdgeInsets.only(bottom: _topMargin),
+                              width: _mediaQueryWidth * .6,
+                              height: _mediaQueryWidth * .6,
+                              child: ClockScreen()),
+                          alignment: Alignment.topCenter,
                         ),
-                  _confirmButton,
-                  SizedBox(height: 40),
-                ],
-              )),
+                        _optionsContainer(
+                            'W O R K    T I M E', _workOptions, 1),
+                        SizedBox(
+                          height: 15,
+                        ),
+                        _optionsContainer(
+                            'B R E A K   T I M E ', _intervalOptions, 2),
+                        Platform.isIOS
+                            ? SizedBox(
+                                height: 35,
+                              )
+                            : SizedBox(
+                                height: 15,
+                              ),
+                        _confirmButton,
+                        SizedBox(height: 15),
+                      ],
+                    )),
+              ),
+              // Spacer(),
+              Container(
+                child: _bannerArea,
+              )
+            ],
+          ),
         ],
       ),
     );
