@@ -234,7 +234,7 @@ class _HomeScreenState extends State<HomeScreen> {
     Container _bannerArea = Container(
       width: _mediaQueryWidth,
       height: _mediaQueryHeight * 0.08,
-      color: Colors.white,
+      color: Colors.black12,
       child: Center(
         child: AdWidget(
           ad: _clockController.ad,
