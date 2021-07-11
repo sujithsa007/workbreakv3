@@ -24,10 +24,10 @@
                  screen fades out. A splash screen is useful to avoid any visual
                  gap between the end of Android's launch screen and the painting of
                  Flutter's first frame. -->
-            <meta-data
-              android:name="io.flutter.embedding.android.SplashScreenDrawable"
-              android:resource="@drawable/launch_background"
-              />
+<!--            <meta-data-->
+<!--              android:name="io.flutter.embedding.android.SplashScreenDrawable"-->
+<!--              android:resource="@mipmap/splash_bg"-->
+<!--              />-->
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
@@ -42,4 +42,5 @@
            android:name="com.google.android.gms.ads.APPLICATION_ID"
            android:value="ca-app-pub-3470431594248807~2331378930"/>
     </application>
+    <uses-permission android:name="android.permission.INTERNET"/>
 </manifest>

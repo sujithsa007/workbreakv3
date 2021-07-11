@@ -28,6 +28,7 @@ class ClockController extends GetxController {
   Future<InitializationStatus> _initGoogleMobileAds() {
     // TODO: Initialize Google Mobile Ads SDK
     return MobileAds.instance.initialize();
+    // Change your Id
   }
 
   BannerAd _ad;
