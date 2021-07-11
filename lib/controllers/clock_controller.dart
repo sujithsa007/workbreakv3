@@ -133,16 +133,15 @@ class ClockController extends GetxController {
       );
     } else {
       setClockThemeTriggerValue = true;
-
       Get.snackbar(
-          'Success',
-          _buttonChange.value == false
-              ? 'Start Working'
-              : 'Your new settings have been applied',
-          duration: Duration(seconds: 3),
-          colorText: Colors.white,
-          backgroundColor: Colors.blue,
-          snackPosition: SnackPosition.BOTTOM);
+        'Success',
+        _buttonChange.value == false
+            ? 'Start Working'
+            : 'Your new settings have been applied',
+        duration: Duration(seconds: 3),
+        colorText: Colors.white,
+        backgroundColor: Colors.blue,
+      );
       _buttonChange.value == true
           ? _selectedWorkTimer.cancel()
           : print('Timer not active');

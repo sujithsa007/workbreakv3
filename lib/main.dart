@@ -42,7 +42,7 @@ class MyApp extends StatelessWidget {
             ),
           ),
           nextScreen: nextScreen,
-          splashTransition: SplashTransition.fadeTransition,
+          splashTransition: SplashTransition.rotationTransition,
           pageTransitionType: transition,
           backgroundColor: color);
 
@@ -54,25 +54,7 @@ class MyApp extends StatelessWidget {
           primarySwatch: CustomColor.colorCustom,
           fontFamily: '',
         ),
-        home: splashScreen(
-            100,
-            'W O R K   B R E A K',
-            Colors.green,
-            40,
-            PageTransitionType.fade,
-            splashScreen(
-                100,
-                'W O R K   B R E A K',
-                Colors.blue,
-                40,
-                PageTransitionType.fade,
-                splashScreen(
-                    100,
-                    'W O R K   B R E A K',
-                    Colors.green,
-                    40,
-                    PageTransitionType.fade,
-                    splashScreen(100, 'W O R K   B R E A K', Colors.blue, 40,
-                        PageTransitionType.fade, HomeScreen())))));
+        home: splashScreen(1500, 'W O R K   B R E A K', Colors.white70, 40,
+            PageTransitionType.scale, HomeScreen()));
   }
 }
