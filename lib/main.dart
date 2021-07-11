@@ -20,6 +20,8 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
   AnimatedSplashScreen splashScreen(int dur, String text, Color color,
           double fontSize, transition, nextScreen) =>
       AnimatedSplashScreen(
@@ -47,82 +49,30 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
+        key: _scaffoldKey,
         theme: ThemeData(
           primarySwatch: CustomColor.colorCustom,
           fontFamily: '',
         ),
         home: splashScreen(
             100,
-            'W O R K',
+            'W O R K   B R E A K',
             Colors.green,
-            80,
-            PageTransitionType.rotate,
+            40,
+            PageTransitionType.fade,
             splashScreen(
                 100,
-                'W O R K',
-                Colors.deepOrange,
-                60,
-                PageTransitionType.rotate,
+                'W O R K   B R E A K',
+                Colors.blue,
+                40,
+                PageTransitionType.fade,
                 splashScreen(
                     100,
-                    'W O R K',
-                    Colors.black,
-                    100,
-                    PageTransitionType.rotate,
-                    splashScreen(
-                        100,
-                        'W O R K',
-                        Colors.amber,
-                        50,
-                        PageTransitionType.rotate,
-                        splashScreen(
-                            100,
-                            'B R E A K',
-                            Colors.blue,
-                            30,
-                            PageTransitionType.rotate,
-                            splashScreen(
-                                100,
-                                'B R E A K',
-                                Colors.red,
-                                70,
-                                PageTransitionType.rotate,
-                                splashScreen(
-                                    100,
-                                    'B R E A K',
-                                    Colors.greenAccent,
-                                    100,
-                                    PageTransitionType.rotate,
-                                    splashScreen(
-                                        100,
-                                        'B R E A K',
-                                        Colors.grey,
-                                        70,
-                                        PageTransitionType.rotate,
-                                        splashScreen(
-                                            100,
-                                            'W O R K   B R E A K',
-                                            Colors.green,
-                                            40,
-                                            PageTransitionType.fade,
-                                            splashScreen(
-                                                100,
-                                                'W O R K   B R E A K',
-                                                Colors.blue,
-                                                40,
-                                                PageTransitionType.fade,
-                                                splashScreen(
-                                                    100,
-                                                    'W O R K   B R E A K',
-                                                    Colors.green,
-                                                    40,
-                                                    PageTransitionType.fade,
-                                                    splashScreen(
-                                                        100,
-                                                        'W O R K   B R E A K',
-                                                        Colors.blue,
-                                                        40,
-                                                        PageTransitionType.fade,
-                                                        HomeScreen())))))))))))));
+                    'W O R K   B R E A K',
+                    Colors.green,
+                    40,
+                    PageTransitionType.fade,
+                    splashScreen(100, 'W O R K   B R E A K', Colors.blue, 40,
+                        PageTransitionType.fade, HomeScreen())))));
   }
 }
