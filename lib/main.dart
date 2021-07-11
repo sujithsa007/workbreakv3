@@ -7,8 +7,6 @@ import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:page_transition/page_transition.dart';
-
 import 'package:work_break/utilities/color_swatches.dart';
 import 'package:work_break/views/home_screen.dart';
 
@@ -20,41 +18,24 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-
-  AnimatedSplashScreen splashScreen(int dur, String text, Color color,
-          double fontSize, transition, nextScreen) =>
-      AnimatedSplashScreen(
-          duration: dur,
-          splash: Center(
-            child: Container(
-              height: 500,
-              alignment: Alignment.center,
-              child: Text(
-                text,
-                style: TextStyle(
-                    color: Colors.white,
-                    fontSize: fontSize,
-                    fontWeight: FontWeight.bold,
-                    fontFamily: 'Future'),
-                textAlign: TextAlign.center,
-              ),
-            ),
-          ),
-          nextScreen: nextScreen,
-          splashTransition: SplashTransition.rotationTransition,
-          pageTransitionType: transition,
-          backgroundColor: color);
-
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
-        key: _scaffoldKey,
         theme: ThemeData(
           primarySwatch: CustomColor.colorCustom,
           fontFamily: '',
         ),
-        home: splashScreen(1500, 'W O R K   B R E A K', Colors.white70, 40,
-            PageTransitionType.scale, HomeScreen()));
+        home: AnimatedSplashScreen(
+          duration: 2000,
+          nextScreen: HomeScreen(),
+          backgroundColor: Colors.white60,
+          curve: Curves.bounceIn,
+          splash: Text('W O R K   B R E A K',
+              style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 45,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: 'Future')),
+        ));
   }
 }
