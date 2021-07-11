@@ -19,7 +19,7 @@ dependencies:
   wakelock : 0.1.4+2
   intl: ^0.17.0
   google_mobile_ads: ^0.13.0
-  animated_splash_screen: ^1.0.1
+  animated_splash_screen: ^1.0.1+2
   page_transition: ^1.1.7+4
 
 
