@@ -19,8 +19,8 @@ import 'package:work_break/utilities/messages.dart';
 
 class ClockController extends GetxController {
   ClockController() {
-    // _initGoogleMobileAds();
-    // loadBanner();
+    _initGoogleMobileAds();
+    loadBanner();
     _clockAnimateTimer();
     Wakelock.enable();
   }
