@@ -21,6 +21,7 @@ void main() {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    // var _mediaQueryWidth =  MediaQuery.of(context).s
     return GetMaterialApp(
         theme: ThemeData(
           primarySwatch: CustomColor.colorCustom,
@@ -36,7 +37,7 @@ class MyApp extends StatelessWidget {
           splash: Text('W O R K   B R E A K',
               style: TextStyle(
                   color: Colors.white,
-                  fontSize: 45,
+                  fontSize: 35,
                   fontWeight: FontWeight.bold,
                   fontFamily: 'Future')),
         ));

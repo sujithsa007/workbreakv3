@@ -11,8 +11,7 @@ import 'package:get/get.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:grouped_buttons/grouped_buttons.dart';
 import 'package:work_break/controllers/clock_controller.dart';
-import 'package:work_break/controllers/text_to_speech_controller.dart';
-import 'package:work_break/utilities/messages.dart';
+// import 'package:work_break/controllers/text_to_speech_controller.dart';
 import 'package:work_break/views/clock.dart';
 import 'dart:io' show Platform;
 
@@ -23,13 +22,13 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final ClockController _clockController = Get.put(ClockController());
-  final TextToSpeechController _textToSpeechController =
-      Get.put(TextToSpeechController());
+  /* final TextToSpeechController _textToSpeechController =
+      Get.put(TextToSpeechController());*/
   Widget build(BuildContext context) {
     var _mediaQueryHeight = MediaQuery.of(context).size.height;
     var _mediaQueryWidth = MediaQuery.of(context).size.width;
     double _fontSizeTitle = _mediaQueryHeight > 550 ? 22 : 18;
-    double _fontSizeSubtitle = _mediaQueryHeight > 550 ? 16 : 12;
+    // double _fontSizeSubtitle = _mediaQueryHeight > 550 ? 16 : 12;
     double _fontSizeBullet = _mediaQueryHeight > 550 ? 12 : 8;
     double _fontButton = _mediaQueryHeight > 550 ? 22 : 16;
     double _topMargin = _mediaQueryHeight > 550
@@ -106,6 +105,55 @@ class _HomeScreenState extends State<HomeScreen> {
                 colorBlendMode: BlendMode.modulate)),
       ),
     );
+
+    Container _drawer = Container(
+        color: Colors.grey,
+        width: MediaQuery.of(context).size.height * .2,
+        // height: MediaQuery.of(context).size.height * .5,
+        child: SafeArea(
+          child: Drawer(
+            child: ListView(
+              padding: EdgeInsets.zero,
+              children: <Widget>[
+                ListTile(
+                  title: Row(
+                    children: [
+                      Container(
+                        child: Icon(
+                          Icons.info_outline,
+                          size: 20,
+                          color: Colors.green,
+                        ),
+                        margin: EdgeInsets.only(left: 10, right: 10),
+                      ),
+                      Text(
+                        'Info',
+                        style: TextStyle(color: Colors.green),
+                      ),
+                    ],
+                  ),
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
+                ),
+                ListTile(
+                  leading: Icon(
+                    Icons.settings,
+                    size: 20,
+                    color: Colors.blue,
+                  ),
+                  title: Text(
+                    'Settings',
+                    style: TextStyle(color: Colors.blue),
+                  ),
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
+                ),
+              ],
+            ),
+          ),
+        ));
 
     RichText _appBarTitle = RichText(
       text: TextSpan(children: [
@@ -254,6 +302,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 height: _mediaQueryHeight * 0.92,
                 child: Scaffold(
                     backgroundColor: Colors.transparent,
+                    // drawer: _drawer,
                     appBar: AppBar(
                       title: _appBarTitle,
                       centerTitle: true,

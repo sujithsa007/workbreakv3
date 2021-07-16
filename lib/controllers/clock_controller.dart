@@ -146,7 +146,7 @@ class ClockController extends GetxController {
     // int intRemInterval = remInterval;
     // setRemainingTime = intRemTime;
     _countDownTimer = Timer.periodic(Duration(seconds: 1), (Timer timer) {
-      // print(intRemTime.toString());
+      print(intRemTime.toString());
       // print(totTime);
       print(i);
       if (i == 0) {
@@ -282,10 +282,10 @@ class ClockController extends GetxController {
                 ' minutes. Lets get back to work',
         true);
 
-    //Tester timer
-    int i = 0;
-    _testTimer = Timer.periodic(Duration(seconds: 1), (Timer timer) async {
-      // print(i++);
-    });
+    // //Tester timer
+    // int i = 0;
+    // _testTimer = Timer.periodic(Duration(seconds: 1), (Timer timer) async {
+    //   print(i++);
+    // });
   }
 }

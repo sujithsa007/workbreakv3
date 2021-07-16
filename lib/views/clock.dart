@@ -18,9 +18,9 @@ class ClockScreen extends StatelessWidget {
     var _mediaQueryHeight = MediaQuery.of(context).size.height;
     var _mediaQueryWidth = MediaQuery.of(context).size.width;
     var _lineWidth = _mediaQueryWidth * .03;
-    var _imageWidth = _mediaQueryHeight > 550
-        ? _mediaQueryWidth * .35
-        : _mediaQueryWidth * .35;
+    // var _imageWidth = _mediaQueryHeight > 550
+    //     ? _mediaQueryWidth * .35
+    //     : _mediaQueryWidth * .35;
 
     Center _displayTime(clockController) => Center(
           child: Container(
