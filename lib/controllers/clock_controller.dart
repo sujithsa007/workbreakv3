@@ -19,16 +19,14 @@ import 'package:work_break/utilities/messages.dart';
 
 class ClockController extends GetxController {
   ClockController() {
-    _initGoogleMobileAds();
-    loadBanner();
+    // _initGoogleMobileAds();
+    // loadBanner();
     _clockAnimateTimer();
     Wakelock.enable();
   }
 
   Future<InitializationStatus> _initGoogleMobileAds() {
-    // TODO: Initialize Google Mobile Ads SDK
     return MobileAds.instance.initialize();
-    // Change your Id
   }
 
   BannerAd _ad;
@@ -51,8 +49,23 @@ class ClockController extends GetxController {
       ),
     );
 
-    // TODO: Load an ad
     _ad.load();
+  }
+
+  RxInt _remainingTime = 0.obs;
+
+  get remainingTime => _remainingTime.value;
+
+  set setRemainingTime(int val) {
+    _remainingTime.value = val;
+  }
+
+  RxInt _remainingInterval = 0.obs;
+
+  get remainingInterval => _remainingInterval.value;
+
+  set setRemainingInterval(int val) {
+    _remainingInterval.value = val;
   }
 
   final TextToSpeechController _textToSpeechController =
@@ -68,6 +81,8 @@ class ClockController extends GetxController {
   Timer _selectedWorkTimer;
   Timer _selectedIntervalTimer;
   Timer _testTimer;
+  Timer _clockTimer;
+  Timer _countDownTimer;
 
   String _finalAnnounceTime = '';
 
@@ -108,10 +123,50 @@ class ClockController extends GetxController {
   int _timeForWorkTimer, _timeForIntervalTimer;
 
   _clockAnimateTimer() {
-    Timer.periodic(Duration(seconds: 1), (Timer timer) {
+    _clockTimer = Timer.periodic(Duration(seconds: 1), (Timer timer) {
       _secondsForAnimation.value = DateTime.now().second / 60;
       _currentTimeToDisplay.value = DateFormat('hh:mm').format(DateTime.now());
       _amPmToDisplay.value = DateFormat(' a').format(DateTime.now());
+    });
+  }
+
+  _clockAnimateCountDown(workTime, breakTime) {
+    _clockTimer.cancel();
+    if (_countDownTimer != null) {
+      _countDownTimer.cancel();
+    }
+    int remTime = int.parse(workTime.toString().split(' ')[0]);
+    int remInterval = int.parse(breakTime.toString().split(' ')[0]);
+    int intRemTime = remTime * 60;
+    int intRemInterval = remInterval * 60;
+    int totTime = intRemTime + intRemInterval;
+
+    int i = 0;
+    // int intRemTime = remTime;
+    // int intRemInterval = remInterval;
+    // setRemainingTime = intRemTime;
+    _countDownTimer = Timer.periodic(Duration(seconds: 1), (Timer timer) {
+      // print(intRemTime.toString());
+      // print(totTime);
+      print(i);
+      if (i == 0) {
+        setRemainingTime = intRemTime;
+      }
+      if (i++ + 1 == totTime) {
+        _countDownTimer.cancel();
+        print('timer cancelled');
+        _clockAnimateCountDown(workTime, breakTime);
+      }
+      if (intRemTime >= 0) {
+        setRemainingTime = intRemTime--;
+      }
+      // print(intRemTime);
+      if (intRemTime == -1) {
+        if (intRemInterval >= 0) {
+          setRemainingInterval = intRemInterval--;
+          // print('this is running');
+        }
+      }
     });
   }
 
@@ -142,6 +197,10 @@ class ClockController extends GetxController {
         colorText: Colors.white,
         backgroundColor: Colors.blue,
       );
+      // var remTime = workTime.toString().split(' ')[0];
+      // setRemainingTime = int.parse(remTime);
+      _clockAnimateCountDown(workTime.toString(), breakInterval.toString());
+
       _buttonChange.value == true
           ? _selectedWorkTimer.cancel()
           : print('Timer not active');
@@ -159,12 +218,12 @@ class ClockController extends GetxController {
 
   _startTimer(int duration, String message, bool triggerFn) async {
     return Timer.periodic(Duration(minutes: duration), (Timer timer) async {
-      await _textToSpeechController.speak(message);
       triggerFn ? _testTimer.cancel() : print('tester running');
       triggerFn
           ? _setUpTimer(_timeForWorkTimer, _timeForIntervalTimer)
           : print('No need to trigger ******');
       triggerFn ? _selectedIntervalTimer.cancel() : _selectedWorkTimer.cancel();
+      await _textToSpeechController.speak(message);
     });
   }
 
@@ -204,8 +263,8 @@ class ClockController extends GetxController {
             ' minutes';
       }
     }
-    print(_convertedTime);
-    print(_finalAnnounceTime);
+    // print(_convertedTime);
+    // print(_finalAnnounceTime);
     var _randomMessage = RandomMessage.getARandomMessage();
     print('You have worked for ' + _finalAnnounceTime + '. $_randomMessage.');
 
@@ -220,7 +279,7 @@ class ClockController extends GetxController {
             ? 'You have taken a break for 1 hour. Lets get back to work.'
             : 'You have taken a break for ' +
                 _timeForIntervalTimer.toString() +
-                ' minutes. Lets get back to work.',
+                ' minutes. Lets get back to work',
         true);
 
     //Tester timer

@@ -289,7 +289,6 @@ class _HomeScreenState extends State<HomeScreen> {
                       ],
                     )),
               ),
-              // Spacer(),
               Container(
                 child: _bannerArea,
               )

@@ -7,6 +7,7 @@ import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:work_break/utilities/color_swatches.dart';
 import 'package:work_break/views/home_screen.dart';
 
@@ -30,6 +31,8 @@ class MyApp extends StatelessWidget {
           nextScreen: HomeScreen(),
           backgroundColor: Colors.white60,
           curve: Curves.bounceIn,
+          // splashTransition: SplashTransition.fadeTransition,
+          pageTransitionType: PageTransitionType.fade,
           splash: Text('W O R K   B R E A K',
               style: TextStyle(
                   color: Colors.white,

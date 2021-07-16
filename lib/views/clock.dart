@@ -57,10 +57,61 @@ class ClockScreen extends StatelessWidget {
             radius: _mediaQueryWidth * radiusMultiplier,
             lineWidth: _lineWidth,
             animation: true,
-            percent: _clockController.secondsForAnimation,
+            percent: _clockController.buttonChange == false
+                ? _clockController.secondsForAnimation
+                : 1.0,
             circularStrokeCap: CircularStrokeCap.round,
             backgroundColor: _clockController.clockThemeTrigger ? bg1 : bg2,
             progressColor: _clockController.clockThemeTrigger ? pc1 : pc2,
+          ),
+        );
+    Center _remainingTime(remainingTime, message) => Center(
+          child: RichText(
+            textAlign: TextAlign.center,
+            text: new TextSpan(
+              style: new TextStyle(
+                fontSize: 12.0,
+                color: Colors.black,
+              ),
+              children: <TextSpan>[
+                TextSpan(
+                    text: remainingTime.toString().split('.')[0] == '0' ||
+                            remainingTime.toString().split('.')[0] == '1'
+                        ? 'less than 1'
+                        : remainingTime.toString().split('.')[0],
+                    style: new TextStyle(
+                        color: message == 'BREAK TIME'
+                            ? Colors.red
+                            : Colors.deepOrange,
+                        fontSize: remainingTime.toString().split('.')[0] ==
+                                    '0' ||
+                                remainingTime.toString().split('.')[0] == '1'
+                            ? 20
+                            : 30,
+                        fontWeight: FontWeight.w600)),
+                TextSpan(
+                    text: message == ''
+                        ? ''
+                        : remainingTime.toString().split('.')[0] == '0' ||
+                                remainingTime.toString().split('.')[0] == '1'
+                            ? '\nminute'
+                            : '\nminutes',
+                    style: new TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w700,
+                      color: Colors.black,
+                    )),
+                TextSpan(
+                    text: '\n$message',
+                    style: new TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w700,
+                      color: message == 'BREAK TIME'
+                          ? Colors.red
+                          : Colors.deepOrange,
+                    )),
+              ],
+            ),
           ),
         );
 
@@ -77,7 +128,19 @@ class ClockScreen extends StatelessWidget {
                   ),
                 ),
               ),
-              _displayTime(_clockController),
+              _clockController.buttonChange == false
+                  ? _displayTime(_clockController)
+                  : _clockController.remainingTime == 0
+                      ? _remainingTime(
+                          _clockController.remainingInterval == 0 ||
+                                  _clockController.remainingInterval == 1
+                              ? ''
+                              : _clockController.remainingInterval / 60,
+                          _clockController.remainingInterval == 0
+                              ? ''
+                              : 'BREAK TIME')
+                      : _remainingTime(
+                          _clockController.remainingTime / 60, 'WORK TIME'),
               _clockRing(0.42, Colors.transparent, Colors.transparent,
                   Colors.blue, Colors.green),
               _clockRing(0.48, Colors.transparent, Colors.transparent,
